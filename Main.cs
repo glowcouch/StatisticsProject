@@ -22,10 +22,10 @@ namespace StatisticsProject
             answers = csv.GetRecords<Answer>().ToList<Answer>().ToArray<Answer>();
 
             //Draw all the charts
-            WPMBooksWeek(20);    
+            WPMBooksWeekScreenTime(20);    
         }
 
-        static void WPMBooksWeek(int dotDiameter)
+        static void WPMBooksWeekScreenTime(int dotDiameter)
         {
             Image image = new Image<Rgba32>(graphWidth, graphHeight);
 
@@ -55,7 +55,7 @@ namespace StatisticsProject
                 image.Mutate(x=> x.Fill(Color.Cyan, new PathBuilder().AddArc(
                     new PointF(((float)answers[i].WPM/(float)maxWPM)*graphWidth, 
                     graphHeight-(((float)answers[i].BooksWeek/(float)maxBooksWeek)*graphHeight)), 
-                    dotDiameter/2, dotDiameter/2, 0, 0, 360)
+                    (answers[i].ScreenTime*5)+5, (answers[i].ScreenTime*5)+5, 0, 0, 360)
                     .Build()));
             }
 
