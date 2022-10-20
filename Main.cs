@@ -12,6 +12,9 @@ namespace StatisticsProject
     {
         static int graphWidth = 1920;
         static int graphHeight = 1080;    
+
+        static int graphPadding = 100;
+      
         static Answer[] answers;
 
         static void Main(string[] args)
@@ -28,6 +31,8 @@ namespace StatisticsProject
         static void WPMBooksWeekScreenTime(int dotDiameter)
         {
             Image image = new Image<Rgba32>(graphWidth, graphHeight);
+
+            image.Mutate(x=> x.Fill(Color.White, new Rectangle(new Point(0,0), new Size(graphWidth, graphHeight))));
 
             int maxWPM = 0;
             float maxBooksWeek = 0;
@@ -52,9 +57,9 @@ namespace StatisticsProject
 
             for (int i = 0; i < answers.Length; i++)
             {
-                image.Mutate(x=> x.Fill(Color.Cyan, new PathBuilder().AddArc(
-                    new PointF(((float)answers[i].WPM/(float)maxWPM)*graphWidth, 
-                    graphHeight-(((float)answers[i].BooksWeek/(float)maxBooksWeek)*graphHeight)), 
+                image.Mutate(x=> x.Fill(Color.Black, new PathBuilder().AddArc(
+                    new PointF(((float)answers[i].WPM/(float)maxWPM)*(graphWidth-graphPadding*2)-graphPadding, 
+                    graphHeight-(((float)answers[i].BooksWeek/(float)maxBooksWeek)*(graphHeight-graphPadding*2))-graphPadding), 
                     (answers[i].ScreenTime*5)+5, (answers[i].ScreenTime*5)+5, 0, 0, 360)
                     .Build()));
             }
