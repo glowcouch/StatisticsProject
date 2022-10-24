@@ -64,6 +64,29 @@ namespace StatisticsProject
                     .Build()));
             }
 
+            //Find the averages
+            float meanWPM = 0;
+            float meanScreenTime = 0;
+            float meanBooksWeek = 0;
+
+            foreach (Answer answer in answers)
+            {
+                meanWPM += answer.WPM;
+                meanScreenTime += answer.ScreenTime;
+                meanBooksWeek += answer.BooksWeek;
+            }
+
+            meanWPM = meanWPM/answers.Length;
+            meanScreenTime = meanScreenTime/answers.Length;
+            meanBooksWeek = meanBooksWeek/answers.Length;
+
+            //Draw the averages
+            image.Mutate(x=> x.Fill(Color.Red, new PathBuilder().AddArc(
+                    new PointF(((float)meanWPM/(float)maxWPM)*(graphWidth-graphPadding*2)-graphPadding, 
+                    graphHeight-(((float)meanBooksWeek/(float)maxBooksWeek)*(graphHeight-graphPadding*2))-graphPadding), 
+                    (meanScreenTime*5)+5, (meanScreenTime*5)+5, 0, 0, 360)
+                    .Build()));
+
             image.Save("WPMBooksWeek.png");
         }
     }
