@@ -13,7 +13,7 @@ namespace StatisticsProject
         static int graphWidth = 1920;
         static int graphHeight = 1080;    
 
-        static int graphPadding = 100;
+        static int graphPadding = 200;
       
         static Answer[] answers;
 
@@ -25,10 +25,10 @@ namespace StatisticsProject
             answers = csv.GetRecords<Answer>().ToList<Answer>().ToArray<Answer>();
 
             //Draw all the charts
-            WPMBooksWeekScreenTime(20);    
+            WPMBooksWeekScreenTime(20, 5, 20, 20, 30);    
         }
 
-        static void WPMBooksWeekScreenTime(int dotDiameter)
+        static void WPMBooksWeekScreenTime(int dotDiameter, int axisesThickness, int ticksX, int ticksY, int tickLength)
         {
             Image image = new Image<Rgba32>(graphWidth, graphHeight);
 
@@ -86,6 +86,26 @@ namespace StatisticsProject
                     graphHeight-(((float)meanBooksWeek/(float)maxBooksWeek)*(graphHeight-graphPadding*2))-graphPadding), 
                     (meanScreenTime*5)+5, (meanScreenTime*5)+5, 0, 0, 360)
                     .Build()));
+
+            //Draw the axises
+
+            Pen axisesPen = Pens.Solid(Color.Grey, axisesThickness);
+
+            //X
+            image.Mutate(x=> x.Draw(axisesPen, new PathBuilder().AddLine(new PointF(0, graphHeight-((graphPadding/3)*2)), new PointF(graphWidth, graphHeight-((graphPadding/3)*2))).Build()));
+
+            for (int i = graphPadding; i < (graphWidth-(graphPadding*2)); i +=(graphWidth-(graphPadding*2))/ticksX)
+            {
+              image.Mutate(x=> x.Draw(axisesPen, new PathBuilder().AddLine(new PointF(i, graphHeight-((graphPadding/3)*2)), new PointF(i, graphHeight-((graphPadding/3)*2)+tickLength)).Build()));
+            }
+
+            //Y
+            image.Mutate(x=> x.Draw(axisesPen, new PathBuilder().AddLine(new PointF((graphPadding/3)*2, 0), new PointF((graphPadding/3)*2, graphHeight)).Build()));
+
+            for (int i = graphHeight-graphPadding; i > 0; i -=(graphHeight-(graphPadding*2))/ticksY)
+            {
+              image.Mutate(x=> x.Draw(axisesPen, new PathBuilder().AddLine(new PointF((graphPadding/3)*2, i), new PointF(((graphPadding/3)*2)-tickLength, i)).Build()));
+            }
 
             image.Save("WPMBooksWeek.png");
         }
